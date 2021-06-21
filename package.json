@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "server:debug": "nodemon --inspect app.js",
-    "server": "nodemon app.js",
-    "start": "node app.js",
+    "server:debug": "nodemon --inspect server.js",
+    "server": "nodemon server.js",
+    "start": "node server.js",
     "client-install": "npm install --prefix client",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
