@@ -38,6 +38,9 @@ export default class CharacterController {
       })
 
       this.target = fbx;
+      console.log(this.target, this.params)
+      this.target.position.set(...this.params.position);
+
       this.params.scene.add(this.target);
 
       this.mixer = new THREE.AnimationMixer(this.target);

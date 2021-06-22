@@ -8,6 +8,7 @@ import downImg  from './assets/images/skybox/down.bmp';
 import frontImg  from './assets/images/skybox/front.bmp';
 import backImg  from './assets/images/skybox/back.bmp';
 import CharacterController from './CharacterController/CharacterController';
+import NetworkCharacterController from './NetworkCharacterController/NetworkCharacterController';
 import ThirdPersonCamera from './ThirdPersonCamera/ThirdPersonCamera';
 import { io } from 'socket.io-client';
 
@@ -21,7 +22,7 @@ class World {
     // this.setOrbitControls();
     this.setSkybox();
     this.setPlane();
-    this.setCharacter();
+   // this.setCharacter();
 
     this.setSocket();
 
@@ -30,13 +31,39 @@ class World {
   }
 
   setSocket() {
-    io.connect('/');
+    this.players = {}
+    this.mainPlayer = null;
+
+    this.socket = io.connect('/');
+    this.socket.on('receive starting position', (pos) => {
+      this.setCharacter(pos)
+    })
+
+    this.socket.on('pos', (data) => {
+      const [ id, pos ] = data;
+      
+      if (!(id in this.players)) {
+        console.log('hello')
+        const player = new NetworkCharacterController({
+          position: pos,
+          scene: this.scene
+        })
+        this.players[id] = player;
+      } else {
+        if (this.players[id].target){
+          this.players[id].target.position.set(...pos);
+        }
+      }
+
+    })
+
   }
 
-  setCharacter() {
+  setCharacter(position) {
     this.controls = new CharacterController({
       camera: this.camera,
-      scene: this.scene
+      scene: this.scene,
+      position
     })
 
 
@@ -51,6 +78,7 @@ class World {
       antialias: true
     });
     this.renderer.outputEncoding = THREE.sRGBEncoding;
+    this.renderer.gammaFactor = 2.2;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -124,7 +152,7 @@ class World {
     const plane = new THREE.Mesh(
       new THREE.PlaneGeometry(100, 100, 10, 10),
       new THREE.MeshStandardMaterial({
-        color: 0xEFEED6,
+        color: 0x808080,
       }));
     plane.castShadow = false;
     plane.receiveShadow = true;
@@ -155,9 +183,15 @@ class World {
   step(timeElapsed) {
     const timeElapsedinSeconds = timeElapsed * 0.001;
 
-    if (this.controls) this.controls.update(timeElapsedinSeconds);
+    if (this.controls) {
+      this.controls.update(timeElapsedinSeconds);
+      this.socket.emit('pos', [ ...this.controls.position.toArray() ])
+    }
 
-    this.thirdPersonCamera.update(timeElapsedinSeconds);
+    if (this.thirdPersonCamera) {
+      
+      this.thirdPersonCamera.update(timeElapsedinSeconds);
+    }
   }
 
 }
