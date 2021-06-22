@@ -59,6 +59,13 @@ class World {
 
     })
 
+    this.socket.on('user disconnected', (id) => {
+      if (this.players[id]) {
+        this.scene.remove(this.players[id].target);
+        delete this.players[id]
+      }
+    })
+
   }
 
   setCharacter(position) {
@@ -109,7 +116,7 @@ class World {
 
   setLighting() {
     let light = new THREE.DirectionalLight(0xFFFFFF, 1);
-    light.position.set(13, 20, -30);
+    light.position.set(30, 40, -100);
     light.target.position.set(0, 0, 0);
     light.castShadow = true;
     light.shadow.bias = -0.001;
