@@ -40,7 +40,7 @@ class World {
     })
 
     this.socket.on('pos', (data) => {
-      const [ id, pos, state ] = data;
+      const [ id, pos, state, rotation ] = data;
       
       if (!(id in this.players)) {
         console.log('hello')
@@ -51,9 +51,9 @@ class World {
         this.players[id] = player;
       } else {
         if (this.players[id].target){
-          console.log(data)
           this.players[id].target.position.set(...pos);
           this.players[id].stateMachine.setState(state);
+          this.players[id].target.quaternion.set(...rotation);
         }
       }
 
@@ -188,7 +188,11 @@ class World {
     if (this.controls) {
       this.controls.update(timeElapsedinSeconds);
       if (this.controls.stateMachine.currentState) {
-        this.socket.emit('pos', [[ ...this.controls.position.toArray() ], this.controls.stateMachine.currentState.name])
+        this.socket.emit('pos', [
+          [ ...this.controls.position.toArray() ], 
+          this.controls.stateMachine.currentState.name,
+          this.controls.rotation.toArray()
+        ])
       }
     }
 

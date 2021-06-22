@@ -48,6 +48,7 @@ export default class CharacterController {
       // this.manager = new THREE.LoadingManager();
       // this.manager.onLoad = () => {
       // }
+      console.log(this.rotation)
       
       const inputActions = [ 'walk', 'run', 'idle' ];
       for (const inputAction of inputActions) {
