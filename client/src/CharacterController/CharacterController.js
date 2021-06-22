@@ -119,7 +119,7 @@ export default class CharacterController {
     sideways.applyQuaternion(controlObject.quaternion);
     sideways.normalize();
 
-    forward.multiplyScalar(velocity.z * timeInSeconds);
+    forward.multiplyScalar(velocity.z * timeInSeconds * 1.8);
     sideways.multiplyScalar(velocity.x * timeInSeconds);
 
     controlObject.position.add(forward);

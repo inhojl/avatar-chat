@@ -30,25 +30,42 @@ class ConnectedUser {
   }
   
   broadcast() {
-    for (let i = 0; i < USERS.length; i++) {
-      if (USERS[i].id === this.id) continue;
-      USERS[i].socket.emit('pos', [ 
+    Object.values(USERS).forEach(user => {
+      if (user.id === this.id) return;
+      user.socket.emit('pos', [ 
         this.id, 
         this.pos, 
         this.state,
         this.rotation 
-      ]);
-      this.socket.emit('pos', [ 
-        USERS[i].id, 
-        USERS[i].pos, 
-        USERS[i].state,
-        USERS[i].rotation
-      ]);
-    }
+      ])
+      this.socket.emit('pos', [
+        user.id, 
+        user.pos, 
+        user.state,
+        user.rotation
+      ])
+    })
+
+
+    // for (let i = 0; i < USERS.length; i++) {
+    //   if (USERS[i].id === this.id) continue;
+    //   USERS[i].socket.emit('pos', [ 
+    //     this.id, 
+    //     this.pos, 
+    //     this.state,
+    //     this.rotation 
+    //   ]);
+    //   this.socket.emit('pos', [ 
+    //     USERS[i].id, 
+    //     USERS[i].pos, 
+    //     USERS[i].state,
+    //     USERS[i].rotation
+    //   ]);
+    // }
   }
 }
 
-const USERS = [];
+const USERS = {};
 
 
 if (process.env.NODE_ENV === 'production') {
@@ -60,7 +77,14 @@ if (process.env.NODE_ENV === 'production') {
 
 io.on('connection', (socket) => {
   console.log('user connected')
-  USERS.push(new ConnectedUser(socket));
+  USERS[socket.id] = new ConnectedUser(socket);
+
+  socket.on('disconnect', () => {
+    console.log(socket.id)
+    delete USERS[socket.id]
+    io.emit('user disconnected', socket.id)
+  })
+
 
 })
 
