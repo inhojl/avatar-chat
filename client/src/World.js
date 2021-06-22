@@ -181,6 +181,7 @@ class World {
       this.previousRenderTime = time;
     });
   }
+  
 
   step(timeElapsed) {
     const timeElapsedinSeconds = timeElapsed * 0.001;
