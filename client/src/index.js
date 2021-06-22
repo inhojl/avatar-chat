@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
-import World from './world';
+import World from './World';
 
 
 document.addEventListener('DOMContentLoaded', () => {
