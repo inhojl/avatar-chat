@@ -40,7 +40,7 @@ class World {
     })
 
     this.socket.on('pos', (data) => {
-      const [ id, pos ] = data;
+      const [ id, pos, state ] = data;
       
       if (!(id in this.players)) {
         console.log('hello')
@@ -51,7 +51,9 @@ class World {
         this.players[id] = player;
       } else {
         if (this.players[id].target){
+          console.log(data)
           this.players[id].target.position.set(...pos);
+          this.players[id].stateMachine.setState(state);
         }
       }
 
@@ -185,8 +187,17 @@ class World {
 
     if (this.controls) {
       this.controls.update(timeElapsedinSeconds);
-      this.socket.emit('pos', [ ...this.controls.position.toArray() ])
+      if (this.controls.stateMachine.currentState) {
+        this.socket.emit('pos', [[ ...this.controls.position.toArray() ], this.controls.stateMachine.currentState.name])
+      }
     }
+
+    if (Object.keys(this.players).length > 0) {
+      Object.values(this.players).forEach(player => {
+        player.update(timeElapsedinSeconds);
+      })
+    }
+
 
     if (this.thirdPersonCamera) {
       
