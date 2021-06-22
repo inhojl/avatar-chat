@@ -13,22 +13,37 @@ class ConnectedUser {
   constructor(socket) {
     this.id = socket.id;
     this.pos = [Math.random() * 20, 0, Math.random() * 20];
+    this.state = 'idle';
     this.socket = socket;
+    this.rotation = [0,0,0,0];
     this.socket.emit('receive starting position', this.pos)
 
-    this.socket.on('pos', pos => {
-      this.pos = [ ...pos ];
-      this.broadcastPosition()
+    this.socket.on('pos', data => {
+      const [ pos, state, rotation ] = data;
+      this.pos = pos;
+      this.state = state;
+      this.rotation = rotation;
+      this.broadcast()
     });
 
-    this.broadcastPosition();
+    this.broadcast();
   }
   
-  broadcastPosition() {
+  broadcast() {
     for (let i = 0; i < USERS.length; i++) {
       if (USERS[i].id === this.id) continue;
-      USERS[i].socket.emit('pos', [ this.id, this.pos ]);
-      this.socket.emit('pos', [ USERS[i].id, USERS[i].pos ]);
+      USERS[i].socket.emit('pos', [ 
+        this.id, 
+        this.pos, 
+        this.state,
+        this.rotation 
+      ]);
+      this.socket.emit('pos', [ 
+        USERS[i].id, 
+        USERS[i].pos, 
+        USERS[i].state,
+        USERS[i].rotation
+      ]);
     }
   }
 }
