@@ -7,9 +7,8 @@ import upImg  from './assets/images/skybox/up.bmp';
 import downImg  from './assets/images/skybox/down.bmp';
 import frontImg  from './assets/images/skybox/front.bmp';
 import backImg  from './assets/images/skybox/back.bmp';
-import clericFbx from './assets/fbx/cleric.fbx';
-import clericTexture from './assets/images/textures/clericTexture.png';
 import CharacterController from './CharacterController/CharacterController';
+import ThirdPersonCamera from './ThirdPersonCamera/ThirdPersonCamera';
 
 class World {
 
@@ -18,7 +17,7 @@ class World {
     this.setCamera();
     this.setScene();
     this.setLighting();
-    this.setOrbitControls();
+    // this.setOrbitControls();
     this.setSkybox();
     this.setPlane();
     this.setCharacter();
@@ -28,34 +27,16 @@ class World {
   }
 
   setCharacter() {
-
-    this.mixers = [];
-
     this.controls = new CharacterController({
       camera: this.camera,
       scene: this.scene
     })
 
 
-    // const loader = new FBXLoader();
-    // loader.load(clericFbx, (fbx) => {
-    //   fbx.scale.setScalar(0.05);
-    //   console.log(fbx)
-    //   fbx.traverse(c => {
-    //     c.castShadow = true;
-    //     if (c.geometry && c.geometry.attributes && c.geometry.attributes.uv) {
-    //       c.material.map = new THREE.TextureLoader().load(clericTexture);
-    //     }
-    //   })
-
-    //   this.mixer = new THREE.AnimationMixer(fbx);
-    //   const idle = this.mixer.clipAction(fbx.animations[3]);
-    //   idle.play()
-
-    //   this.scene.add(fbx);
-    // });
-
-
+    this.thirdPersonCamera = new ThirdPersonCamera({
+      camera: this.camera,
+      target: this.controls
+    });
   }
 
   setRenderer() {
@@ -81,7 +62,8 @@ class World {
     const near = 1.0;
     const far = 1000.0;
     this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    this.camera.position.set(75, 20, 0);
+    this.camera.position.set(25, 10, 25);
+
   }
 
   setScene() {
@@ -167,6 +149,8 @@ class World {
     const timeElapsedinSeconds = timeElapsed * 0.001;
 
     if (this.controls) this.controls.update(timeElapsedinSeconds);
+
+    this.thirdPersonCamera.update(timeElapsedinSeconds);
   }
 
 }

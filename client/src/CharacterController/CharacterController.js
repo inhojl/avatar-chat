@@ -12,12 +12,18 @@ export default class CharacterController {
     this.decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
     this.acceleration = new THREE.Vector3(1, 0.25, 50.0);
     this.velocity = new THREE.Vector3(0, 0, 0);
+    this.position = new THREE.Vector3();
 
     this.animations = {};
     this.input = new CharacterControllerInput();
     this.stateMachine = new CharacterFiniteStateMachine(this.animations);
 
     this.loadModels();
+  }
+
+  get rotation() {
+    if (!this.target) return new THREE.Quaternion();
+    return this.target.quaternion;
   }
 
   loadModels() {
@@ -36,9 +42,9 @@ export default class CharacterController {
 
       this.mixer = new THREE.AnimationMixer(this.target);
 
-      this.manager = new THREE.LoadingManager();
-      this.manager.onLoad = () => {
-      }
+      // this.manager = new THREE.LoadingManager();
+      // this.manager.onLoad = () => {
+      // }
       
       const inputActions = [ 'walk', 'run', 'idle' ];
       for (const inputAction of inputActions) {
@@ -56,7 +62,8 @@ export default class CharacterController {
 
   update(timeInSeconds) {
     // if target to render doesn't exist
-    if (!this.target) return;
+    if (!this.stateMachine.currentState) return;
+
     this.stateMachine.update(timeInSeconds, this.input);
 
     const velocity = this.velocity;
@@ -96,6 +103,7 @@ export default class CharacterController {
     }
 
     controlObject.quaternion.copy(R);
+
     const oldPosition = new THREE.Vector3();
     oldPosition.copy(controlObject.position);
 
@@ -113,7 +121,7 @@ export default class CharacterController {
     controlObject.position.add(forward);
     controlObject.position.add(sideways);
 
-    oldPosition.copy(controlObject.position);
+    this.position.copy(controlObject.position);
 
     if (this.mixer) {
       this.mixer.update(timeInSeconds);
