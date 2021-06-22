@@ -9,6 +9,7 @@ import frontImg  from './assets/images/skybox/front.bmp';
 import backImg  from './assets/images/skybox/back.bmp';
 import CharacterController from './CharacterController/CharacterController';
 import ThirdPersonCamera from './ThirdPersonCamera/ThirdPersonCamera';
+import { io } from 'socket.io-client';
 
 class World {
 
@@ -22,8 +23,14 @@ class World {
     this.setPlane();
     this.setCharacter();
 
+    this.setSocket();
+
     this.previousRenderTime = null;
     this.renderLoop();
+  }
+
+  setSocket() {
+    io.connect('/');
   }
 
   setCharacter() {
