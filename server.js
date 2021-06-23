@@ -11,12 +11,15 @@ const { userInfo } = require('os');
 
 class ConnectedUser {
   constructor(socket) {
+    const characters = [ 'cleric', 'monk', 'rogue', 'warrior', 'wizard'];
     this.id = socket.id;
+    this.character = characters[Math.floor(Math.random() * characters.length)];
+    console.log(this.character)
     this.pos = [Math.random() * 20, 0, Math.random() * 20];
     this.state = 'idle';
     this.socket = socket;
     this.rotation = [0,0,0,0];
-    this.socket.emit('receive starting position', this.pos)
+    this.socket.emit('receive starting position', [ this.pos, this.character ])
 
     this.socket.on('pos', data => {
       const [ pos, state, rotation ] = data;
@@ -36,13 +39,15 @@ class ConnectedUser {
         this.id, 
         this.pos, 
         this.state,
-        this.rotation 
+        this.rotation,
+        this.character
       ])
       this.socket.emit('pos', [
         user.id, 
         user.pos, 
         user.state,
-        user.rotation
+        user.rotation,
+        user.character
       ])
     })
 

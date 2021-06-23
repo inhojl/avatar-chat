@@ -4,6 +4,15 @@ import CharacterControllerInput from './CharacterControllerInput';
 import CharacterFiniteStateMachine from './FiniteStateMachine/CharacterFiniteStateMachine';
 import clericFbx from '../assets/fbx/cleric.fbx';
 import clericTexture from '../assets/images/textures/clericTexture.png';
+import monkFbx from '../assets/fbx/monk.fbx';
+import monkTexture from '../assets/images/textures/monkTexture.png';
+import rogueFbx from '../assets/fbx/rogue.fbx';
+import rogueTexture from '../assets/images/textures/rogueTexture.png';
+import warriorFbx from '../assets/fbx/warrior.fbx';
+import warriorTexture from '../assets/images/textures/warriorTexture.png';
+import wizardFbx from '../assets/fbx/wizard.fbx';
+import wizardTexture from '../assets/images/textures/wizardTexture.png';
+
 
 export default class CharacterController {
 
@@ -28,18 +37,46 @@ export default class CharacterController {
 
   loadModels() {
     const loader = new FBXLoader();
-    loader.load(clericFbx, (fbx) => {
+    let fbxPath;
+    let texturePath;
+    switch(this.params.character) {
+      case 'cleric':
+        fbxPath = clericFbx;
+        texturePath = clericTexture;
+        break;
+      case 'monk':
+        fbxPath = monkFbx;
+        texturePath = monkTexture;
+        break;
+      case 'rogue':
+        fbxPath = rogueFbx;
+        texturePath = rogueTexture;
+        break;
+      case 'warrior':
+        fbxPath = warriorFbx;
+        texturePath = warriorTexture;
+        break;
+      case 'wizard':
+        fbxPath = wizardFbx;
+        texturePath = wizardTexture;
+        break;
+    }
+
+
+    loader.load(fbxPath, (fbx) => {
       fbx.scale.setScalar(0.05);
       fbx.traverse((c) => {
         c.castShadow = true;
         if (c.geometry && c.geometry.attributes && c.geometry.attributes.uv) {
-          c.material.map = new THREE.TextureLoader().load(clericTexture);
+          c.material.map = new THREE.TextureLoader().load(texturePath);
         }
       })
 
       this.target = fbx;
       console.log(this.target, this.params)
       this.target.position.set(...this.params.position);
+      console.log(fbx.animations)
+
 
       this.params.scene.add(this.target);
 
@@ -49,14 +86,44 @@ export default class CharacterController {
       // this.manager.onLoad = () => {
       // }
       console.log(this.rotation)
+
+
       
-      const inputActions = [ 'walk', 'run', 'idle' ];
+      const inputActions = [ 'walk', 'run'];
+      switch(this.params.character) {
+        case 'cleric':
+          inputActions.push('attack_idle');
+          break;
+        case 'monk':
+          inputActions.push('idle_attacking');
+          break;
+        case 'rogue':
+          inputActions.push('attacking_idle');
+          break;
+        case 'warrior':
+          inputActions.push('idle_attacking')
+          break;
+        case 'wizard':
+          inputActions.push('idle_attacking')
+          break;
+      }
+  
+
+
       for (const inputAction of inputActions) {
         const clip = fbx.animations.find((animation) => animation.name.toLowerCase().includes(inputAction))
+
         const action = this.mixer.clipAction(clip);
-        this.animations[inputAction] = {
-          clip,
-          action
+        if (inputAction.includes('idle')) {
+          this.animations['idle'] = {
+            clip,
+            action
+          }
+        } else {
+          this.animations[inputAction] = {
+            clip,
+            action
+          }
         }
       }
       this.stateMachine.setState('idle');
