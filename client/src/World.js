@@ -35,18 +35,19 @@ class World {
     this.mainPlayer = null;
 
     this.socket = io.connect('/');
-    this.socket.on('receive starting position', (pos) => {
-      this.setCharacter(pos)
+    this.socket.on('receive starting position', ([ pos, character]) => {
+      this.setCharacter(pos, character)
     })
 
     this.socket.on('pos', (data) => {
-      const [ id, pos, state, rotation ] = data;
+      const [ id, pos, state, rotation, character ] = data;
       
       if (!(id in this.players)) {
         console.log('hello')
         const player = new NetworkCharacterController({
           position: pos,
-          scene: this.scene
+          scene: this.scene,
+          character
         })
         this.players[id] = player;
       } else {
@@ -68,11 +69,12 @@ class World {
 
   }
 
-  setCharacter(position) {
+  setCharacter(position, character) {
     this.controls = new CharacterController({
       camera: this.camera,
       scene: this.scene,
-      position
+      position,
+      character
     })
 
 
