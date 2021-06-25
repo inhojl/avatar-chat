@@ -2,7 +2,8 @@
 
 export default class CharacterControllerInput {
 
-  constructor() {
+  constructor(world) {
+    this.world = world
     this.keys = {
       forward: false,
       backward: false,
@@ -16,24 +17,36 @@ export default class CharacterControllerInput {
   }
 
   onKeyDown(event) {
-    switch (event.keyCode) {
-      case 87: return this.keys.forward = true; // w
-      case 65: return this.keys.left = true; // a
-      case 83: return this.keys.backward = true; // s
-      case 68: return this.keys.right = true; // d
-      case 32: return this.keys.space = true; // space
-      case 16: return this.keys.shift = true; // shift
+    const input = document.getElementById('chatbox__input')
+
+    const loginInput = document.getElementById('login__input')
+
+    if (this.world.username && input !== document.activeElement) {
+      switch (event.keyCode) {
+        case 87: return this.keys.forward = true; // w
+        case 65: return this.keys.left = true; // a
+        case 83: return this.keys.backward = true; // s
+        case 68: return this.keys.right = true; // d
+        case 32: return this.keys.space = true; // space
+        case 16: return this.keys.shift = true; // shift
+      }
+
     }
   }
 
   onKeyUp(event) {
-    switch (event.keyCode) {
-      case 87: return this.keys.forward = false; // w
-      case 65: return this.keys.left = false; // a
-      case 83: return this.keys.backward = false; // s
-      case 68: return this.keys.right = false; // d
-      case 32: return this.keys.space = false; // space
-      case 16: return this.keys.shift = false; // shift
+    const input = document.getElementById('chatbox__input')
+
+
+    if (this.world.username && input !== document.activeElement) {
+      switch (event.keyCode) {
+        case 87: return this.keys.forward = false; // w
+        case 65: return this.keys.left = false; // a
+        case 83: return this.keys.backward = false; // s
+        case 68: return this.keys.right = false; // d
+        case 32: return this.keys.space = false; // space
+        case 16: return this.keys.shift = false; // shift
+      }
     }
   }
 

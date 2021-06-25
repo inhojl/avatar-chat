@@ -15,6 +15,7 @@ import { io } from 'socket.io-client';
 class World {
 
   constructor() {
+    this.username = '';
     this.setRenderer();
     this.setCamera();
     this.setScene();
@@ -25,9 +26,39 @@ class World {
    // this.setCharacter();
 
     this.setSocket();
+    this.setChat();
 
     this.previousRenderTime = null;
     this.renderLoop();
+  }
+
+  setChat = () => {
+    const form = document.getElementById('chatbox__form')
+    const self = this;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      console.log(self)
+      self.socket.emit('chat', { message: e.target.children[0].value, username: self.username});
+      e.target.children[0].value = '';
+      
+    }, false)
+
+    const usernameForm = document.getElementById('login__form');
+    
+    usernameForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      console.log(e.target.children[0])
+
+      const input = document.getElementById('login__input')
+
+      if (input.value.trim().length > 0) {
+        self.username = input.value;
+        const loginScreen = document.getElementById('login')
+        loginScreen.style.display = 'none';
+      }
+    })
+
+
   }
 
   setSocket() {
@@ -67,6 +98,28 @@ class World {
       }
     })
 
+    this.socket.on('chat', ({ username, message }) => {
+      const chatList = document.getElementById('chatbox__chat');
+      const newChat = document.createElement('li')
+      newChat.innerText = `${username}: ${message}`;
+        
+      
+        const childrenCopy = Array.from(chatList.children).map(c => `${c.innerText}`)
+        childrenCopy.push(`${username}: ${message}`)
+        console.log('chatlist children', chatList.children)
+        chatList.innerHTML = '';
+        console.log({ childrenCopy })
+        childrenCopy.slice().reverse().forEach(c => {
+          const li = document.createElement('li')
+          li.innerText = c
+          chatList.append(li)
+        })
+
+
+
+
+    })
+
   }
 
   setCharacter(position, character) {
@@ -74,7 +127,8 @@ class World {
       camera: this.camera,
       scene: this.scene,
       position,
-      character
+      character,
+      world: this
     })
 
 

@@ -24,7 +24,7 @@ export default class CharacterController {
     this.position = new THREE.Vector3();
 
     this.animations = {};
-    this.input = new CharacterControllerInput();
+    this.input = new CharacterControllerInput(params.world);
     this.stateMachine = new CharacterFiniteStateMachine(this.animations);
 
     this.loadModels();

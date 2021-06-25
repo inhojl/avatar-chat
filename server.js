@@ -29,6 +29,11 @@ class ConnectedUser {
       this.broadcast()
     });
 
+    this.socket.on('chat', ({ message, username }) => {
+      console.log({ message, username })
+      io.emit('chat', { message, username });
+    })
+
     this.broadcast();
   }
   

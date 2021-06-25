@@ -25,10 +25,155 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: none;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #chatbox {
+        height: 300px;
+        width: 600px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: black;
+        opacity: 0.5;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #chatbox__form {
+        width: 100%;
+      }
+
+
+      #chatbox__chat {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column-reverse;
+        overflow: auto;
+        overflow-x: hidden;
+        will-change: scroll-position;
+      }
+
+      #chatbox__chat::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      border-radius: 8px;
+      background-color: transparent;
+      }
+
+      #chatbox__chat::-webkit-scrollbar-thumb {
+        background: #bbb;
+        border-radius: 8px;
+      }
+
+      #chatbox__chat:hover::-webkit-scrollbar-thumb {
+        background: #e4e4e4;
+      }
+
+      #chatbox__chat::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 8px;
+      }
+
+      #chatbox__input {
+        font-size: 20px;
+        width: 100%;
+        
+      }
+
+      li {
+        color: white;
+      }
+
+      #login {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        top: 0;
+        background-color: black;
+        opacity: 0.7;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #login__label {
+        color: white;
+      }
+
+      #login__header {
+        color: white;
+        margin-bottom: 20px;
+      }
+
+      #login p {
+        color: white;
+        align-self: flex-start;
+      }
+
+      #login__controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 40px;
+      }
+
+      #login__form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #login__form-header {
+        margin-bottom: 5px; 
+      }
+
+      h3 {
+        color: white;
+        margin-bottom: 5px;
+      }
+      
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <div id="login">
+      <h1 id="login__header">Chat with friends in 3D!</h1>
+      <div id="login__controls">
+        <h3>Controls:</h3>
+        <p>- W,A,S,D to move around</p>
+        <p>- Hold shift to run</p>
+      </div>
+      <form id="login__form" autocomplete="off">
+        <p id="login__form-header">Enter a username to start chatting:</p>
+
+        <input type="text" id="login__input"></input>
+      </form>
+    </div>
+    <div id="chatbox">
+      <ul id="chatbox__chat">
+
+      </ul>
+      <form id="chatbox__form" autocomplete="off">
+        <input type="text" id="chatbox__input" />
+      </form>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
