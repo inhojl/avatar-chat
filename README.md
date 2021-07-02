@@ -1,6 +1,6 @@
-# Duel Arena
+# Avatar Chat
 ## Background
-Duel Arena is a multiplayer battle arena game where players attempt to push each other off the arena.
+Avatar Chat is a multiplayer battle arena game where players attempt to push each other off the arena.
 
 ## Functionality & MVP
 Users will be able to:
