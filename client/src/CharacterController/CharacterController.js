@@ -73,9 +73,7 @@ export default class CharacterController {
       })
 
       this.target = fbx;
-      console.log(this.target, this.params)
       this.target.position.set(...this.params.position);
-      console.log(fbx.animations)
 
 
       this.params.scene.add(this.target);
@@ -85,7 +83,6 @@ export default class CharacterController {
       // this.manager = new THREE.LoadingManager();
       // this.manager.onLoad = () => {
       // }
-      console.log(this.rotation)
 
 
       

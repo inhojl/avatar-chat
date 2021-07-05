@@ -8,6 +8,7 @@ import downImg  from './assets/images/skybox/down.bmp';
 import frontImg  from './assets/images/skybox/front.bmp';
 import backImg  from './assets/images/skybox/back.bmp';
 import CharacterController from './CharacterController/CharacterController';
+import grassTexture from './assets/images/textures/grassTexture.jpg'
 import NetworkCharacterController from './NetworkCharacterController/NetworkCharacterController';
 import ThirdPersonCamera from './ThirdPersonCamera/ThirdPersonCamera';
 import { io } from 'socket.io-client';
@@ -37,7 +38,6 @@ class World {
     const self = this;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      console.log(self)
       self.socket.emit('chat', { message: e.target.children[0].value, username: self.username});
       e.target.children[0].value = '';
       
@@ -47,7 +47,6 @@ class World {
     
     usernameForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      console.log(e.target.children[0])
 
       const input = document.getElementById('login__input')
 
@@ -74,7 +73,6 @@ class World {
       const [ id, pos, state, rotation, character ] = data;
       
       if (!(id in this.players)) {
-        console.log('hello')
         const player = new NetworkCharacterController({
           position: pos,
           scene: this.scene,
@@ -101,17 +99,15 @@ class World {
     this.socket.on('chat', ({ username, message }) => {
       const chatList = document.getElementById('chatbox__chat');
       const newChat = document.createElement('li')
-      newChat.innerText = `${username}: ${message}`;
+      newChat.innerHTML = `<span class='${this.username === username ? 'username' : 'friend'}'>${username}</span>: ${message}`;
         
       
-        const childrenCopy = Array.from(chatList.children).map(c => `${c.innerText}`)
-        childrenCopy.push(`${username}: ${message}`)
-        console.log('chatlist children', chatList.children)
+        const childrenCopy = Array.from(chatList.children).map(c => `${c.innerHTML}`)
+        childrenCopy.push(`<span class='${this.username === username ? 'username' : 'friend'}'>${username}</span>: ${message}`)
         chatList.innerHTML = '';
-        console.log({ childrenCopy })
         childrenCopy.slice().reverse().forEach(c => {
           const li = document.createElement('li')
-          li.innerText = c
+          li.innerHTML = c
           chatList.append(li)
         })
 
@@ -175,17 +171,15 @@ class World {
     light.position.set(30, 40, -100);
     light.target.position.set(0, 0, 0);
     light.castShadow = true;
-    light.shadow.bias = -0.001;
+    light.shadow.bias = -0.00001;
     light.shadow.mapSize.width = 4096;
     light.shadow.mapSize.height = 4096;
     light.shadow.camera.near = 0.1;
-    light.shadow.camera.far = 500.0;
-    light.shadow.camera.near = 0.5;
-    light.shadow.camera.far = 500.0;
-    light.shadow.camera.left = 50;
-    light.shadow.camera.right = -50;
-    light.shadow.camera.top = 50;
-    light.shadow.camera.bottom = -50;
+    light.shadow.camera.far = 3000.0;
+    light.shadow.camera.left = 300;
+    light.shadow.camera.right = -300;
+    light.shadow.camera.top = 300;
+    light.shadow.camera.bottom = -300;
     this.scene.add(light);
 
     light = new THREE.AmbientLight(0x101010, 10);
@@ -214,10 +208,15 @@ class World {
   }
 
   setPlane() {
+    const texture = new THREE.TextureLoader().load(grassTexture)
+    texture.anisotropy = 32
+texture.repeat.set(100, 100)
+texture.wrapT = THREE.RepeatWrapping
+texture.wrapS = THREE.RepeatWrapping
     const plane = new THREE.Mesh(
-      new THREE.PlaneGeometry(100, 100, 10, 10),
+      new THREE.PlaneGeometry(10000, 10000),
       new THREE.MeshStandardMaterial({
-        color: 0x808080,
+        map: texture
       }));
     plane.castShadow = false;
     plane.receiveShadow = true;

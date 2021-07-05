@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="A chat concept application where users can interact with others in real-time in 3D space with 3D avatars."
-    />
-    <meta property="og:type"          content="website">
-    <meta property="og:url"           content="https://avatar-chat.herokuapp.com">
-    <meta property="og:title"         content="Avatar Chat">
-    <meta property="og:description"   content="A chat concept application where users can interact with others in real-time in 3D space with 3D avatars.">
-    <meta property="og:image"         content="%PUBLIC_URL%/3Dchat.png">
-    <!--
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Otomanopee+One&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description"
+    content="A chat concept application where users can interact with others in real-time in 3D space with 3D avatars." />
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://avatar-chat.herokuapp.com">
+  <meta property="og:title" content="Avatar Chat">
+  <meta property="og:description"
+    content="A chat concept application where users can interact with others in real-time in 3D space with 3D avatars.">
+  <meta property="og:image" content="%PUBLIC_URL%/avatar-thumbnail.gif">
+  <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <!--
+  <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -27,157 +30,200 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Avatar Chat</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        outline: none;
-      }
+  <title>Avatar Chat</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      outline: none;
+    }
 
-      body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Otomanopee One', sans-serif;
+    }
 
-      #chatbox {
-        height: 300px;
-        width: 600px;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        background-color: black;
-        opacity: 0.5;
-        display: flex;
-        flex-direction: column;
-      }
+    #chatbox {
+      height: 300px;
+      width: 600px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      background-color: black;
+      opacity: 0.5;
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+    }
 
-      #chatbox__form {
-        width: 100%;
-      }
+    #chatbox__form {
+      width: 100%;
+    }
 
 
-      #chatbox__chat {
-        margin-top: auto;
-        display: flex;
-        flex-direction: column-reverse;
-        overflow: auto;
-        overflow-x: hidden;
-        will-change: scroll-position;
-      }
+    #chatbox__chat {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      overflow: auto;
+      overflow-x: hidden;
+      will-change: scroll-position;
+      padding: 5px 10px;
+    }
 
-      #chatbox__chat::-webkit-scrollbar {
+    #chatbox__chat::-webkit-scrollbar {
       width: 8px;
       height: 8px;
       border-radius: 8px;
       background-color: transparent;
-      }
+    }
 
-      #chatbox__chat::-webkit-scrollbar-thumb {
-        background: #bbb;
-        border-radius: 8px;
-      }
+    #chatbox__chat::-webkit-scrollbar-thumb {
+      background: #bbb;
+      border-radius: 8px;
+    }
 
-      #chatbox__chat:hover::-webkit-scrollbar-thumb {
-        background: #e4e4e4;
-      }
+    #chatbox__chat:hover::-webkit-scrollbar-thumb {
+      background: #e4e4e4;
+    }
 
-      #chatbox__chat::-webkit-scrollbar-track {
-        background: transparent;
-        border-radius: 8px;
-      }
+    #chatbox__chat::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 8px;
+    }
 
-      #chatbox__input {
-        font-size: 20px;
-        width: 100%;
-        
-      }
+    #chatbox__input {
+      font-size: 15px;
+      width: 100%;
+      padding: 5px 10px;
+      font-family: 'Otomanopee One', sans-serif;
 
-      li {
-        color: white;
-      }
+    }
 
-      #login {
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        top: 0;
-        background-color: black;
-        opacity: 0.7;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
+    li {
+      color: white;
+    }
 
-      #login__label {
-        color: white;
-      }
+    #login {
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
+      background-image: url("./background.png"); 
+      opacity: 0.95;
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
 
-      #login__header {
-        color: white;
-        margin-bottom: 20px;
-      }
+    #background {
+      background-color: black;
+      background-image: radial-gradient(rgb(51, 51, 51), black);
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      opacity: 0.8;
+      z-index: -1;
+    }
 
-      #login p {
-        color: white;
-        align-self: flex-start;
-      }
+    #login__label {
+      color: white;
+    }
 
-      #login__controls {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        margin-bottom: 40px;
-      }
+    #login__header {
+      color: white;
+      margin-bottom: 10px;
+      font-size: 70px;
 
-      #login__form {
-        display: flex;
-        flex-direction: column;
-      }
+    }
 
-      #login__form-header {
-        margin-bottom: 5px; 
-      }
+    #login__header3 {
+      margin-bottom: 20px;
+      font-size: 30px;
+    }
 
-      h3 {
-        color: white;
-        margin-bottom: 5px;
-      }
-      
-    </style>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    #login p {
+      color: white;
+      align-self: flex-start;
+    }
 
-    <div id="login">
-      <h1 id="login__header">Chat with friends in 3D!</h1>
-      <div id="login__controls">
-        <h3>Controls:</h3>
-        <p>- W,A,S,D to move around</p>
-        <p>- Hold shift to run</p>
-      </div>
-      <form id="login__form" autocomplete="off">
-        <p id="login__form-header">Enter a username to start chatting:</p>
+    #login__controls {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 40px;
+    }
 
-        <input type="text" id="login__input"></input>
-      </form>
+    #login__form {
+      display: flex;
+      flex-direction: column;
+      background-position: center center;
+    }
+
+    #login__input {
+      padding: 5px 10px 5px 10px;
+      font-size: 20px;
+      font-family: 'Otomanopee One', sans-serif;
+      display: flex;
+      align-items: center;
+    }
+
+    h3 {
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .username {
+      color: #3B82F6;
+    }
+
+    .friend {
+      color: #F59E0B;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+
+  <div id="login">
+    <div id="background"></div>
+    <h1 id="login__header">Avatar Chat</h1>
+    <h3 id="login__header3">Chat with friends in 3D!</h1>
+    <div id="login__controls">
+      <h3>Controls:</h3>
+      <p>- W,A,S,D to move around</p>
+      <p>- Hold shift to run</p>
     </div>
-    <div id="chatbox">
-      <ul id="chatbox__chat">
+    <form id="login__form" autocomplete="off">
+      <p id="login__form-header">Enter a username to start chatting:</p>
 
-      </ul>
-      <form id="chatbox__form" autocomplete="off">
-        <input type="text" id="chatbox__input" />
-      </form>
-    </div>
-    <!--
+      <input type="text" id="login__input"></input>
+    </form>
+  </div>
+  <div id="chatbox">
+    <ul id="chatbox__chat">
+
+    </ul>
+    <form id="chatbox__form" autocomplete="off">
+      <input type="text" id="chatbox__input" />
+    </form>
+  </div>
+  <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -187,5 +233,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  </body>
+</body>
+
 </html>

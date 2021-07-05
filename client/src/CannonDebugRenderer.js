@@ -165,7 +165,6 @@ export default class CannonDebugRenderer {
                 break;
 
             case CANNON.Shape.types.TRIMESH:
-                console.log("creatin trimesh debug")
                 geometry = new THREE.BufferGeometry();
                 points = []
                 for (let i = 0; i < (shape).vertices.length; i += 3) {
