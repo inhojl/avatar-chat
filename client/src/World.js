@@ -31,6 +31,7 @@ class World {
 
     this.previousRenderTime = null;
     this.renderLoop();
+    this.chat = []
   }
 
   setChat = () => {
@@ -97,19 +98,23 @@ class World {
     })
 
     this.socket.on('chat', ({ username, message }) => {
+      this.chat.push(`<span class='${this.username === username ? 'username' : 'friend'}'>${username}</span>: ${message}`)
       const chatList = document.getElementById('chatbox__chat');
-      const newChat = document.createElement('li')
-      newChat.innerHTML = `<span class='${this.username === username ? 'username' : 'friend'}'>${username}</span>: ${message}`;
-        
+      chatList.innerHTML = '';
+      this.chat.slice().reverse().forEach(c => {
+        const li = document.createElement('li')
+        li.innerHTML = c
+        chatList.append(li)
+      })
       
-        const childrenCopy = Array.from(chatList.children).map(c => `${c.innerHTML}`)
-        childrenCopy.push(`<span class='${this.username === username ? 'username' : 'friend'}'>${username}</span>: ${message}`)
-        chatList.innerHTML = '';
-        childrenCopy.slice().reverse().forEach(c => {
-          const li = document.createElement('li')
-          li.innerHTML = c
-          chatList.append(li)
-        })
+        // const childrenCopy = Array.from(chatList.children).map(c => `${c.innerHTML}`)
+        // childrenCopy.push(`<span class='${this.username === username ? 'username' : 'friend'}'>${username}</span>: ${message}`)
+        // chatList.innerHTML = '';
+        // childrenCopy.slice().reverse().forEach(c => {
+        //   const li = document.createElement('li')
+        //   li.innerHTML = c
+        //   chatList.append(li)
+        // })
 
 
 
